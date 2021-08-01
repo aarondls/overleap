@@ -71,3 +71,51 @@ In the horizontal (x) direction, the force applied is a set proportion of the ve
 ## Parts
 
 The full parts list and STL models for the 3D printed parts are available at the [parts](Parts) folder.
+
+## Assembly
+
+### Mechanical assembly
+
+Start by installing all the heat set inserts into the parts. After installing, they should sit flush against the plastic and feel secure when tightening screws into them.
+
+Next, glue the magnets that came with the AS5047P encoder evaluation board onto the back of the motor. Super glue or epoxy can be used for this.
+
+Line up the rubber pad against the inner sensing area of the force sensitive resistor and cut the rubber to the same size. This will be used as the foot pad later on.
+
+At this point, we will need to jump ahead to one portion of the electrical assembly and solder the jumper wires to the encoder. Solder 5 cables to the A, B, I, 5V, and GND outputs of the encoder board. Take note which wire colors correspond to which outputs, as this will be needed later on.
+
+Now, we can continue with the mechanical assembly. As they say, a picture is worth a thousand words, so this guide will be presented as a series of clean and simple drawings similar to Ikea manuals.
+
+These illustrations are designed to be simplistic and intuitive such that the placement of screws, timing belts, and bearings can easily be inferred from them.
+
+You can also view the [complete assembly guide](Drawings/Complete_Assembly.pdf) compiled as a single PDF.
+
+<p align="center">
+  <img src="Drawings/Step 1.png">
+  <img src="Drawings/Step 2.png">
+  <img src="Drawings/Step 3.png">
+  <img src="Drawings/Step 4.png">
+  <img src="Drawings/Step 5.png">
+  <img src="Drawings/Step 6.png">
+  <img src="Drawings/Step 7.png">
+  <img src="Drawings/Step 8.png">
+  <img src="Drawings/Step 9.png">
+  <img src="Drawings/Step 10.png">
+  <img src="Drawings/Step 11.png">
+  <img src="Drawings/Step 12.png">
+  <img src="Drawings/Step 13.png">
+  <img src="Drawings/Step 14.png">
+  <img src="Drawings/Step 15.png">
+</p>
+
+### Electrical assembly
+
+As a side note, I wrote a [separate guide](https://github.com/aarondls/motor-position-control) on starting with the ODrive motor controller. This may be handy with getting familiar with ODrive.
+
+The electronic schematic for overleap is as follows:
+
+<p align="center">
+  <img src="Drawings/Circuit drawing.png">
+</p>
+
+A power resistor can also be attached to the ODrive motor controller, if your power supply cannot dissipate excess current.
