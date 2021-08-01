@@ -67,3 +67,7 @@ During the aerial phase, overleap runs a PD control loop to hold a predefined po
 The force profile in the vertical (y) direction is a sinusoidal curve, specifically of the form a sin^2(b pi t).  The parameters a and b are calculated based on the desired force impulse and stance duration, and t is the time (duration) of the force application. This allows for the regulation of jumping height as well as gradual application of force.
 
 In the horizontal (x) direction, the force applied is a set proportion of the vertical force. Horizontal speed can then be modulated by defining the maximum horizontal force to be applied. On top of allowing for gradual force application, this also keeps the foot firmly in contact with the ground even on slippery surfaces by taking into consideration its coefficient of friction.
+
+## Parts
+
+The full parts list and STL models for the 3D printed parts are available at the [parts](Parts) folder.
