@@ -113,7 +113,7 @@ You can also view the [complete assembly guide](Drawings/Complete_Assembly.pdf) 
 The electronic schematic for overleap is as follows:
 
 <p align="center">
-  <img src="Drawings/Circuit drawing.png">
+  <img src="Drawings/Circuit_drawing.png">
 </p>
 
 A power resistor can also be attached to the ODrive motor controller, if your power supply cannot dissipate excess current.
