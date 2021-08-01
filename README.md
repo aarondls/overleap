@@ -190,3 +190,17 @@ This means that at every boot-up, Overleap will call
 for each axis.
 
 Note if motor wires are switched, make sure to run through this full calibration sequence again.
+
+### Overleap Arduino library installation
+
+The Overleap Arduino library is located at the [Overleap folder](Overleap). To install, follow these steps.
+
+1. Download the Overleap folder. This may require cloning the repository.
+
+2. In the Arduino IDE, select Sketch -> Include Library -> Add .ZIP Library.
+
+3. Select the enclosing Overleap folder and hit Choose. Restart the Arduino IDE.
+
+4. Verify that the Overleap library was installed by navigating to File -> Examples, and checking for the OverleapExample sketch.
+
+This library provides an easy-to-use interface for Overleap that we will examine through the example sketch.
