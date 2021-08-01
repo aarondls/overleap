@@ -204,3 +204,9 @@ The Overleap Arduino library is located at the [Overleap folder](Overleap). To i
 4. Verify that the Overleap library was installed by navigating to File -> Examples, and checking for the OverleapExample sketch.
 
 This library provides an easy-to-use interface for Overleap that we will examine through the example sketch.
+
+### Example sketch
+
+The OverleapExample sketch has everything needed to get started with Overleap. It contains all the necessary code for the prechecks and demonstrates how to program Overleap.
+
+For the remainder of the programming guide below, we will be using this example sketch.
