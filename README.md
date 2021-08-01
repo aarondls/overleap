@@ -210,3 +210,11 @@ This library provides an easy-to-use interface for Overleap that we will examine
 The OverleapExample sketch has everything needed to get started with Overleap. It contains all the necessary code for the prechecks and demonstrates how to program Overleap.
 
 For the remainder of the programming guide below, we will be using this example sketch.
+
+### Prechecks
+
+Before starting, we will need to run through a few checks to ensure everything functions as we expect. Start by ensuring the ODrive motor controller is properly set-up. Next, upload the OverleapExample sketch to the microcontroller.
+
+Overleap will begin searching for the encoder index signal, starting with motor 0, then motor 1. Make sure that the leg has ample room to move around during this phase.
+
+After searching for the encoder index, the list of available commands is printed out to the serial monitor. The ODrive vbus voltage is also printed out, and warns if voltage falls below 12V.
