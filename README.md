@@ -31,7 +31,7 @@ The height and stance time of each jump, as well as horizontal speed of the leg,
 ## Design
 
 <p align="center">
-  <img src="Drawings/Overleap Full Drawing.png">
+  <img src="Drawings/Overleap_Full_Drawing.png">
 </p>
 
 ### Quasi-Direct Drive Actuation
