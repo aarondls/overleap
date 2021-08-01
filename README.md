@@ -218,3 +218,9 @@ Before starting, we will need to run through a few checks to ensure everything f
 Overleap will begin searching for the encoder index signal, starting with motor 0, then motor 1. Make sure that the leg has ample room to move around during this phase.
 
 After searching for the encoder index, the list of available commands is printed out to the serial monitor. The ODrive vbus voltage is also printed out, and warns if voltage falls below 12V.
+
+Since we are interfacing with the AS5047 encoder through ABI, we will need to calibrate where the zero degree position for the leg is. This zero degree position is where both θ<sub>0</sub> and θ<sub>1</sub> is zero degrees, where θ<sub>0</sub> is the angle of the upper leg with respect to the horizontal and θ<sub>1</sub> is the angle of the lower leg with respect to the upper leg. The angles θ<sub>0</sub> and θ<sub>1</sub> are illustrated by the diagram below.
+
+<p align="center">
+  <img src="Drawings/Angle_Direction_Drawing.png">
+</p>

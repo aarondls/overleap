@@ -67,7 +67,7 @@ bool LowBatteryVoltage();
 bool WithinSafeAngles();
 ```
 
-* This returns true if current leg position is within safe angles. Safe angles are defined to be between -10 and 75 degrees for theta0, and within 0 and 135 degrees for theta1.
+* This returns true if current leg position is within safe angles. Safe angles are defined to be between -10 and 75 degrees for θ<sub>0</sub>, and within 0 and 135 degrees for θ<sub>1</sub>.
 
 ```c++
 bool SafeTorqueDirection(MotorTorquePair torque_pair);
