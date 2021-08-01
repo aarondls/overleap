@@ -110,8 +110,6 @@ You can also view the [complete assembly guide](Drawings/Complete_Assembly.pdf) 
 
 ### Electrical assembly
 
-As a side note, I wrote a [separate guide](https://github.com/aarondls/motor-position-control) on starting with the ODrive motor controller. This may be handy with getting familiar with ODrive.
-
 The electronic schematic for overleap is as follows:
 
 <p align="center">
@@ -119,3 +117,76 @@ The electronic schematic for overleap is as follows:
 </p>
 
 A power resistor can also be attached to the ODrive motor controller, if your power supply cannot dissipate excess current.
+
+## Programming
+
+### ODrive Set-up
+
+As a side note, I wrote a [separate guide](https://github.com/aarondls/motor-position-control) on starting with the ODrive motor controller. This may be handy with getting familiar with ODrive.
+
+Start by configuring the motors. Follow the "Configure M0" part on the ODrive [Getting Started](https://docs.odriverobotics.com/#configure-m0) page for both axis 0 and axis 1. The parameters used here are based on the T-Motor 4006 and AS5047 encoder:
+
+* Current limit at 10A
+* Velocity limit at 15 turns/sec
+* Calibration current at 10A
+* Pole pairs (number of magnet poles divided by 2) at 24 magnets / 2 = 12
+* Torque constant at 8.27 / 380KV = 0.02176315789
+* AS5047 CPR at 4000
+
+Overleap will also use these additional configurations:
+
+```bash
+odrv0.config.enable_brake_resistor = True
+odrv0.config.brake_resistance = 0.5
+odrv0.config.dc_max_negative_current = -0.1
+odrv0.config.max_regen_current = 0.5
+```
+
+Save the configuration and reboot.
+
+```bash
+<odrv>.save_configuration()
+<odrv>.reboot();
+```
+
+Next is the motor calibration. Refer to the [AxisState](https://docs.odriverobotics.com/api/odrive.axis.axisstate) page for more information.
+
+Begin by setting `motor.config.pre_calibrated` to `False`:
+
+```bash
+<odrv>.<axis>.motor.config.pre_calibrated  = False
+```
+
+Then, calibrate the motor:
+
+```bash
+<odrv>.<axis>.requested_state = AXIS_STATE_MOTOR_CALIBRATION
+```
+
+This just makes a beeping noise without moving the motor.
+
+Now, set `motor.config.pre_calibrated` to `True`:
+
+```bash
+<odrv>.<axis>.motor.config.pre_calibrated = True
+```
+
+Save the configuration and reboot. Repeat this for both axis.
+
+Finally, calibrate the encoders. For Overleap, ODrive interfaces with the AS5047 encoder through ABI. Follow the [Encoder with index signal](https://docs.odriverobotics.com/encoders.html#encoder-with-index-signal) part for both axis.
+
+ODrive will search for the encoder index manually, so set `startup_encoder_index_search` to `False`.
+
+```bash
+<axis>.config.startup_encoder_index_search = False
+```
+
+This means that at every boot-up, Overleap will call
+
+```bash
+<axis>.requested_state = AXIS_STATE_ENCODER_INDEX_SEARCH
+```
+
+for each axis.
+
+Note if motor wires are switched, make sure to run through this full calibration sequence again.
