@@ -224,3 +224,11 @@ Since we are interfacing with the AS5047 encoder through ABI, we will need to ca
 <p align="center">
   <img src="Drawings/Angle_Direction_Drawing.png">
 </p>
+
+Type the character 'c', then follow the ensuing instructions to calibrate the zero degree position. Once finished, you can view relevant information of the leg, such as position in degrees and velocity in degrees per second for both axis, by typing the character 'd'.
+
+We will need to verify that for axis 0, commanding positive torque results in clockwise rotation, while for axis 1, positive torque results in counterclockwise rotation. The reason for axis 0 being inverted compared with the convention is that ODrive uses the encoder rotation for direction, so simply swapping two wire leads will not change motor direction.
+
+For this step, hold the leg to avoid it moving towards extreme angles. Type the character 'y' to begin this check. Overleap starts by moving motor 0, then waits for your confirmation before moving motor 1. Take note which direction the axis moves. If the motor does not move in the direction we expect, verify that your encoder wiring is correct. A swapped A and B wire could result in opposite rotation.
+
+At every start-up, this sequence remains the same, except for verifying positive torque direction. Overleap begins by searching for the encoder index signal on both axis. Then, calibration of the zero degree position is needed. Finally, it is a good idea to verify that Overleap reads the correct degree position of the leg.
