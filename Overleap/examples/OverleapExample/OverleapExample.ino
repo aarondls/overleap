@@ -28,23 +28,16 @@ void setup() {
 
   Serial.println("OverleapOS loaded.");
   Serial.println("c to calibrate angles");
-  Serial.println("t to test torque calculations");
   Serial.println("d to show current position in degrees and current velocity");
-  Serial.println("h to hold current position with direct torque control");
-  Serial.println("p for hold aerial position using PD loop");
   Serial.println("j to perform a single jump");
   Serial.println("g for go perform multiple jumps in circular direction");
   Serial.println("y to check positive direction of torque");
   Serial.println("i for idle");
-  Serial.println("r for clearing input");
 
   // Check battery voltage
   if (leg.LowBatteryVoltage()) {
     Serial.println("Warning: Low battery voltage");
   }
-
-  // Check if anything wrong; remove later
-  Serial.println(odrive.readFloat());
 }
 
 void loop() {
@@ -57,77 +50,6 @@ void loop() {
       leg.CalibrateAngles();
     }
 
-    if (c == 't') {
-        if (!leg.CalibratedAngles()) {
-          Serial.println("Calibrate first.");
-          return;
-        }
-
-        Serial.println("Calculating torques at current joint positions.");
-
-        float force_x = 0, force_y = 0;
-
-        const unsigned long duration = 30000;
-        unsigned long start = millis();
-
-        char response;
-        while (millis() - start < duration) {
-            if (Serial.available()) {
-                response = Serial.read();
-                if (response == 'e') {
-                    Serial.println("Ending");
-                    break;
-                }
-                if (response == 'n') {
-                    // flush useless information
-                    if (Serial.available()) Serial.read();
-                    
-                    Serial.print("Enter new force x value: ");
-                    String new_fx = "";
-                    while (!new_fx.length()) {
-                        while (!Serial.available()) {
-                            delay(100);
-                        }
-                        new_fx = Serial.readString();
-                        Serial.print("Read line as ");
-                        Serial.println(new_fx);
-                    }
-                    force_x = new_fx.toFloat();
-
-                    Serial.print("Enter new force y value: ");
-
-                    String new_fy = "";
-                    while (!new_fy.length()) {
-                        while (!Serial.available()) {
-                            delay(100);
-                        }
-                        new_fy = Serial.readString();
-                        Serial.print("Read line as ");
-                        Serial.println(new_fy);
-                    }
-                    force_y = new_fy.toFloat();
-
-                    Serial.print("Force x: ");
-                    Serial.println(force_x);
-                    Serial.print("Force y: ");
-                    Serial.println(force_y);
-                    delay(2000);
-                }
-            }
-
-            MotorTorquePair torque = leg.CalculateTorques(force_x, force_y);
-
-            Serial.print("Torque 0: ");
-            Serial.println(-torque.motor_0);
-            Serial.print("Torque 1: ");
-            Serial.println(torque.motor_1);
-
-            delay(100);
-        }
-
-        Serial.println("Ending torque test");
-    }
-
     if (c == 'd') {
         const unsigned long duration = 2000;
         unsigned long start = millis();
@@ -137,104 +59,6 @@ void loop() {
             leg.PrintLegPosVel();
         }
 
-    }
-
-    if (c == 'h') {
-        Serial.println("Attempting to hold position with direct torque control.");
-        Serial.println("Note this uses no PD control loop; the torque values are calculated directly to apply the needed vertical force to remain stationary at the current leg position");
-
-        if (!leg.EnterTorqueControl()) {
-          Serial.println("Aborting.");
-          return;
-        }
-
-        // clear and check for possible errors anywhere
-        float test = odrive.readFloat();
-        Serial.print("Read test value: ");
-        Serial.println(test);
-
-        // forces
-        float f_x = 0, f_y = 2;
-
-        const unsigned long duration = 3000;
-        unsigned long start = millis();
-
-        while (millis() - start < duration) {
-            MotorTorquePair torque = leg.CalculateTorques(f_x, f_y);
-
-            // invert axis 0 since CalculateTorques follows positive torque is CCW
-            // while axis 0 is positive torque goes CW
-            torque.motor_0 = -torque.motor_0;
-
-            Serial.print("Torque 0: ");
-            Serial.print(torque.motor_0);
-            Serial.print(" Torque 1: ");
-            Serial.print(torque.motor_1);
-            Serial.print(" Touchdown: ");
-            Serial.println(leg.Touchdown());
-            
-            if (leg.SafeTorqueDirection(torque)) {
-              odrive_serial.print("c 0 ");
-              odrive_serial.print(torque.motor_0);
-              odrive_serial.print("\n");
-              delay(5);
-              odrive_serial.print("c 1 ");
-              odrive_serial.print(torque.motor_1);
-              odrive_serial.print("\n");
-            } else {
-              Serial.println("Angle limits reached and torques will exceed limit.");
-              // command zero torque
-              odrive_serial.print("c 0 0");
-              odrive_serial.print("\n");
-              delay(5);
-              odrive_serial.print("c 1 0");
-              odrive_serial.print("\n");
-              break;
-            }
-        }
-
-        Serial.println("Ending hold position");
-        // command zero torque
-        odrive_serial.print("c 0 0");
-        odrive_serial.print("\n");
-        odrive_serial.print("c 1 0");
-        odrive_serial.print("\n");
-
-        delay(100);
-        
-        leg.RequestIdleState();
-    }
-
-    if (c == 'p') {
-      Serial.println("Attempting to hold aerial position with PD control loop on torque.");
-
-      if (!leg.EnterTorqueControl()) {
-        Serial.println("Aborting.");
-        return;
-      }
-
-      // clear and check for possible errors
-      float test = odrive.readFloat();
-      Serial.print("Read test value: ");
-      Serial.println(test);
-
-      // test aerial position that waits for touchdown
-      // set phase to aerial
-      leg.SetCurrentPhase(AERIAL_PHASE);
-      // leg.HoldPosition(25.0f, 110.0f, true);
-      leg.SetCurrentPhase(TOUCHDOWN_PHASE);
-
-      // test aerial position that does not wait for touchdown
-      // this should be firm enough to support leg
-      // leg.HoldPosition(45.0f, 90.0f, false, 3000); 
-      // the test dip down
-      // leg.HoldPosition(25.0f, 110.0f, false, 400);
-      // go back up
-      leg.HoldPosition(45.0f, 90.0f, false, 7000); 
-
-      delay(100);
-
-      leg.RequestIdleState();
     }
 
     if (c == 'j') {
@@ -369,10 +193,5 @@ void loop() {
     if (c == 'i') {
       leg.RequestIdleState();
     }
-
-    if (c == 'r') {
-      Serial.println(odrive.readFloat());
-    }
-    
   }
 }
