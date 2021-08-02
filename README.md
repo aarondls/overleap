@@ -291,7 +291,7 @@ We can then request the idle state to end the jump.
 leg.RequestIdleState();
 ```
 
-### Continous hopping
+### Continuous hopping
 
 With a single jump done, let us try consecutive jumps by typing 'g'. Let us examine this code in detail to see how it is done.
 
@@ -348,3 +348,13 @@ Finally, we end by putting the leg into the idle state.
 ```c++
 leg.RequestIdleState();
 ```
+
+## Where to go from here
+
+After going through the OverleapExample sketch, you are already familiar with the core functionality of Overleap and can begin coding your own Overleap controller.
+
+The README of the [Overleap Arduino library](Overleap) lists relevant function declarations and contains detailed comments on their usage.
+
+The framework of using touchdown and takeoff times for calculating the needed impulse to reache a desired height is already set-up, and you can modify the Overleap library for this functionality.
+
+Have fun!
