@@ -136,7 +136,7 @@ void loop() {
       }
       
       // Put into raised stance to secure leg before powering down
-      leg.HoldPosition(35.0f, 100.0f, false, 4000);
+      leg.HoldPosition(45.0f, 90.0f, false, 4000);
 
       delay(100);
         
