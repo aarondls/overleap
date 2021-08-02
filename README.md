@@ -290,3 +290,61 @@ We can then request the idle state to end the jump.
 ```c++
 leg.RequestIdleState();
 ```
+
+### Continous hopping
+
+With a single jump done, let us try consecutive jumps by typing 'g'. Let us examine this code in detail to see how it is done.
+
+It starts similarly with a single jump by setting the initial phase to `TOUCHDOWN_PHASE` and entering torque control.
+
+```c++
+leg.SetCurrentPhase(TOUCHDOWN_PHASE);
+
+if (!leg.EnterTorqueControl()) {
+  Serial.println("Aborting.");
+  return;
+}
+```
+
+The initial jump is different in that there is no downward momentum, so we start the initial jump with less impulse compared to the latter jumps.
+
+```c++
+leg.UpdateForceProfile(2200.0f, 10.0f, 0.4f);
+```
+
+We also set the maximum fx force to be 10N and the fx proportion to be 0.4. This means that the applied force in the x direction is 0.4 times the applied force in the y directions, capped at 10N.
+
+Now, we can perform the initial jump. This is similar to the single jump earlier.
+
+```c++
+leg.HoldPosition(25.0f, 110.0f, false, 3000);
+leg.ExecuteForceProfile();
+leg.HoldPosition(25.0f, 110.0f, true, 800);
+```
+
+After this initial jump, we need to update the force profile with a larger impulse, since the leg will be touching down with a downward momentum.
+
+```c++
+leg.UpdateForceProfile(2600.0f, 10.0f, 0.4f);
+```
+
+Once this is set-up, we can execute multiple jumps in a for loop.
+
+```c++
+for (int jump=1; jump<10; jump++) {
+  leg.ExecuteForceProfile();
+  leg.HoldPosition(25.0f, 110.0f, true, 800);
+}
+```
+
+At the end of the last jump, we want to end with the raised position with enough time to secure the leg before powering down.
+
+```c++
+leg.HoldPosition(45.0f, 90.0f, false, 4000);
+```
+
+Finally, we end by putting the leg into the idle state.
+
+```c++
+leg.RequestIdleState();
+```
