@@ -232,3 +232,61 @@ We will need to verify that for axis 0, commanding positive torque results in cl
 For this step, hold the leg to avoid it moving towards extreme angles. Type the character 'y' to begin this check. Overleap starts by moving motor 0, then waits for your confirmation before moving motor 1. Take note which direction the axis moves. If the motor does not move in the direction we expect, verify that your encoder wiring is correct. A swapped A and B wire could result in opposite rotation.
 
 At every start-up, this sequence remains the same, except for verifying positive torque direction. Overleap begins by searching for the encoder index signal on both axis. Then, calibration of the zero degree position is needed. Finally, it is a good idea to verify that Overleap reads the correct degree position of the leg.
+
+### Single jump
+
+To perform a single jump, type the character 'j'. Let us examine the code in-depth to see how this works.
+
+Before starting the jump, we need to ensure the current phase is on `TOUCHDOWN_PHASE`, as we start on the ground. This is done by calling the `SetCurrentPhase` function with the desired phase as the argument.
+
+```c++
+leg.SetCurrentPhase(TOUCHDOWN_PHASE);
+```
+
+Now, we are ready to control the leg, so we call the `EnterTorqueControl` function.
+
+```c++
+if (!leg.EnterTorqueControl()) {
+  Serial.println("Aborting.");
+  return;
+}
+```
+
+`EnterTorqueControl` returns false if it is unable to sucessfully enter torque and closed loop control on the ODrive, so we print the abort message and stop if anything goes wrong.
+
+After this, we set the desired impulse of the jump with the `UpdateForceProfile` function, with the desired impulse, desired maximum fx force, and proportion of fy applied as fx as the arguments. Impulse is in units of Newton millisecond, while force is in Newtons.
+
+```c++
+leg.UpdateForceProfile(2500.0f, 0, 0.4f);
+```
+
+In this case, we set fx_max to 0 since we want a single jump to go straight up.
+
+Now, everything is set-up for a jump. The next thing to do is put the leg into a good starting position for jumping using the `HoldPosition` function.
+
+```c++
+leg.HoldPosition(25.0f, 110.0f, false, 3000);
+```
+
+The first two arguments tells Overleap to hold the position with θ<sub>0</sub> of 25 degrees and θ<sub>1</sub> of 110 degrees. The third argument is an end_at_touchdown boolean that signals whether the position hold should end if touchdown is detected (if the foot hits the ground). The fourth argument is the maximum time of the position hold in milliseconds. In this case, the position hold ends at 3000ms.
+
+Finally, we can do a jump. This is done by executing the force profile set-up earlier using the `ExecuteForceProfile` function. Immediately after, we put the leg into a position ready for touchdown by calling `HoldPosition`.
+
+```c++
+leg.ExecuteForceProfile();
+leg.HoldPosition(25.0f, 110.0f, true, 800);
+```
+
+Since end_at_touchdown is set, the position hold ends at either touchdown or 800ms, whichever comes first.
+
+Finally, we put the leg into a position with enough time for us to secure it before it powers down, so it doesn't crash to the ground.
+
+```c++
+leg.HoldPosition(45.0f, 90.0f, false, 3000);
+```
+
+We can then request the idle state to end the jump.
+
+```c++
+leg.RequestIdleState();
+```
