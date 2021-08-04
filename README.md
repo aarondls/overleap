@@ -6,15 +6,15 @@
 
 ## Overview
 
-Overleap is an open-source low-cost 3D printed dynamic robotic leg designed be as accessible as possible. Overleap can be assembled with only a 3D printer and minimal tools, without CNC milling / waterjet cutting / laser cutting like other robotic legs.
+Overleap is an open-source low-cost 3D printed dynamic robotic leg designed be as accessible as possible. Overleap can be assembled with a 3D printer and minimal tools, without CNC milling / waterjet cutting / laser cutting like other robotic legs. The building process is tailored to be simple and seamless, from the assembly manual to the programming method, creating a unique assembly experience.
 
-Overleap's building process is tailored to be simple and seamless, from the assembly manual to the programming method, creating a unique assembly experience.
+Overleap is capable of executing quick and dynamic movements such as jumping and continuous hopping in a circle. This is made possible through Overleap's quasi-direct drive actuators and custom foot contact sensor. Jumping is controlled by directly manipulating joint torque, as calculated by the desired foot force and the Jacobian of the leg.
 
 In the future, overleap is planned to be used in other legged projects, such as a low-cost quadruped robot.
 
 ## Capabilities
 
-The overleap leg is capable of executing quick and dynamic movements. Overleap can perform a single jump
+Overleap can perform a single jump
 
 <p align="center">
   <img width="500" src="Images/grass_jump_slowmo.gif">
