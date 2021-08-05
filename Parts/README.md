@@ -5,6 +5,8 @@
 * [ODrive Motor Controller](https://odriverobotics.com/shop/odrive-v36)
     * 24V with connectors
 * [T-Motor Antigravity 4006 380KV - 2 pcs](https://store.tmotor.com/goods.php?id=440)
+* [Teensy 3.6 Microcontroller](https://www.pjrc.com/store/teensy36.html)
+    * Any Arduino-compatible microcontroller works as well
 * [AS5047 Magnetic Encoder Eval Board](https://www.digikey.com/en/products/detail/ams/AS5047P-TS-EK-AB/5452344) - 2 pcs
 * Male to Female 20cm length Jumper Wires
     * There are many packs of these
